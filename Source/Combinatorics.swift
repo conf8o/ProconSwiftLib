@@ -1,0 +1,80 @@
+import Foundation
+
+private struct Combinations<Seq: Sequence>: Sequence, IteratorProtocol {
+    let pool: [Seq.Element]
+    let r: Int
+
+    var indecies: [Int]
+    var first = true
+
+    init(_ seq: Seq, _ r: Int) {
+        self.pool = [Seq.Element](seq)
+        self.r = r
+        self.indecies = [Int](0..<r)
+    }
+
+    mutating func next() -> [Seq.Element]? {
+        let n = pool.count
+        guard r <= n else { return nil }
+        guard !first else {
+            first = false
+            return indecies.map { pool[$0] }
+        }
+
+        var i = r - 1
+        while indecies[i] == i + n - r {
+            if i > 0 {
+                i -= 1
+            } else {
+                return nil
+            }
+        }
+
+        indecies[i] += 1
+        for j in i+1..<r {
+            indecies[j] = indecies[j - 1] + 1
+        }
+
+        return indecies.map { pool[$0] }
+    }
+}
+
+private struct Permutations<Seq: Sequence>: Sequence, IteratorProtocol {
+    let pool: [Seq.Element]
+    let r: Int
+    
+    var indecies: [Int]
+    var cycles: [Int]
+    var first = true
+
+    init(_ seq: Seq, _ r: Int? = nil) {
+        self.pool = [Seq.Element](seq)
+        let n = pool.count
+        self.r = r ?? n
+        self.indecies = [Int](0..<n)
+        self.cycles = [Int](((n-self.r+1)...n).reversed())
+    }
+
+    mutating func next() -> [Seq.Element]? {
+        let n = pool.count
+        guard r <= n else { return nil }
+        guard !first else {
+            first = false
+            return indecies[..<r].map { pool[$0] }
+        }
+
+        for i in (0..<r).reversed() {
+            cycles[i] -= 1
+            
+            if cycles[i] == 0 {
+                indecies[i...] = indecies[(i+1)...] + indecies[i..<i+1]
+                cycles[i] = n - i
+            } else {
+                let j = cycles[i]
+                (indecies[i], indecies[n-j]) = (indecies[n-j], indecies[i])
+                return indecies[..<r].map { pool[$0] }
+            }
+        }
+        return nil
+    }
+}
