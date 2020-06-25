@@ -125,7 +125,7 @@ private struct Deque<T> {
         if isEmpty {
             return nil
         } else {
-            return buffer[head]
+            return buffer[tail]
         }
     }
 
@@ -133,7 +133,7 @@ private struct Deque<T> {
         if isEmpty {
             return nil
         } else {
-            return buffer[tail]
+            return buffer[head]
         }
     }
 }
