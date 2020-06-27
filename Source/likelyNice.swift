@@ -7,6 +7,11 @@ private func readWords<T>(_ f: (Substring) -> T) -> [T] {
     return readLine()!.split(separator: " ").map(f)
 }
 
+prefix operator *
+private prefix func *<T>(a: inout IndexingIterator<[T]>) -> T {
+    return a.next()!
+}
+
 /// C++のコードでよく見かける chmaxやchminを汎用化したもの。
 /// 二つの値を比較し、比較結果がtrueならbをaに入れ、比較結果を返す。
 /// chmax(a, b) は ch(a, b, <)
