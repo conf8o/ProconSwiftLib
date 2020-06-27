@@ -14,10 +14,10 @@ private prefix func *<T>(a: inout IndexingIterator<[T]>) -> T {
 
 /// chmaxやchminの汎用化
 /// 二つの値を比較し、比較結果がtrueならbをaに入れ、比較結果を返す。
-/// chmax(a, b) は ch(a, b, <)
-/// chmin(a, b) は ch(a, b, >)
+/// chmax(a, b) は ch(&a, b, <)
+/// chmin(a, b) は ch(&a, b, >)
 ///
-/// クロージャを使って任意の処理ができる。使えなさそう。
+/// クロージャを使って任意の比較ができる
 /// ch(a, b) { abs($0) < abs($1) }
 @inlinable func ch<T: Comparable>(_ a: inout T, _ b: T, _ compare: (T, T) -> Bool) -> Bool {
     if compare(a, b) {
