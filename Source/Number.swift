@@ -25,12 +25,30 @@ private func pow(_ b: Int, _ n: Int, _ p: Int) -> Int {
     return x
 }
 
+
+private extension Int {
+    func divisors() -> [Int] {
+        var res = [Int]()
+        var i = 1
+        while i * i <= self {
+            if self % i == 0 {
+                res.append(i)
+                if self / i != i {
+                    res.append(self/i)
+                }
+            }
+            i += 1
+        }
+        return res.sorted()
+    }
+}
+
 private struct Prime: Sequence, IteratorProtocol {
     var isPrime: [Bool]
     var p: Int
     let n : Int
 
-    init(n: Int) {
+    init(_ n: Int) {
         self.isPrime = [Bool](repeating: true, count: n+1)
         self.n = n
 
@@ -47,7 +65,11 @@ private struct Prime: Sequence, IteratorProtocol {
             i += p
         }
 
-        p += p == 2 ? 1 : 2
+        guard p > 2 else {
+            p += 1
+            return res
+        }
+
         while !isPrime[p] {
             p += 2
             if p > n {
@@ -57,21 +79,28 @@ private struct Prime: Sequence, IteratorProtocol {
 
         return res
     }
-}
 
-private extension Int {
-    func divisors() -> [Int] {
-        var buf = [Int]()
-        let r = Int(sqrt(Double(self)))
-        for i in 1...r {
-            if self % i == 0 {
-                buf.append(i)
-                if self / i != i {
-                    buf.append(self/i)
-                }
+    static func primeFactorize(_ n: Int) -> [(p:Int, e:Int)] {
+        let rtn = Int(sqrt(Double(n)))
+        var n = n
+        var res = [(p:Int, e:Int)]()
+        for p in Prime(rtn) {
+            guard n % p == 0 else { continue }
+
+            var e = 0
+            while n % p == 0 {
+                n /= p
+                e += 1
             }
+
+            res.append((p: p, e: e))
         }
-        return buf.sorted()
+
+        if n > 1 {
+            res.append((p: n, e: 1))
+        }
+
+        return res
     }
 }
 
@@ -80,8 +109,12 @@ private extension Int {
         var res = [(p: Int, e:Int)]()
         var n = self
         var a = 2
+
         while a * a <= n {
-            guard n % a == 0 else { continue }
+            guard n % a == 0 else {
+                a += 1
+                continue 
+            }
 
             var e = 0
             while n % a == 0 {
@@ -90,7 +123,7 @@ private extension Int {
             }
             res.append((p: a, e: e))
             a += 1
-        } 
+        }
 
         if n != 1  {
             res.append((p: n, e: 1))
