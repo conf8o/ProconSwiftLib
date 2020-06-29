@@ -59,7 +59,7 @@ private struct Prime: Sequence, IteratorProtocol {
 
     mutating func next() -> Int? {
         let res = p
-        var i = p
+        var i = p + p
         while i <= n {
             isPrime[i] = false
             i += p
@@ -70,12 +70,12 @@ private struct Prime: Sequence, IteratorProtocol {
             return res
         }
 
-        while !isPrime[p] {
+        repeat {
             p += 2
             if p > n {
                 return nil
             }
-        }
+        } while !isPrime[p]
 
         return res
     }
