@@ -1,16 +1,34 @@
-/// 空白区切りの文字列を取得する。クロージャや関数を渡して、それぞれの単語を変換できる。
-/// Swiftは区切った文字列がSubstring型なので、Stringにしたいときにも使えそう。
-///
-/// 例: Intにしたい場合
-/// let X = readWords { Int($0)! }
-private func readWords<T>(_ f: (Substring) -> T) -> [T] {
-    return readLine()!.split(separator: " ").map(f)
+extension String {
+    func wordsMap<T>(_ f: (Substring) -> T?) -> [T] {
+        return self.split(separator: " ").compactMap(f)
+    }
+}
+
+private func readWords<T>(_ f: (Substring) -> T?) -> [T] {
+    return readLine()!.wordsMap(f)
 }
 
 prefix operator *
 private prefix func *<T>(a: inout IndexingIterator<[T]>) -> T {
     return a.next()!
 }
+
+extension Optional {
+    func pleaseAC(){
+        print(self!)
+    }
+}
+
+// 使用例
+// readLine().map { line -> Any in 
+//     var nm = line.wordsMap { Int($0) }
+    
+//     let A = readWords { Int($0) }
+//     let B = readWords { Int($0) }
+
+//     return 0
+// }
+// .pleaseAC()
 
 /// chmaxやchminの汎用化
 /// 二つの値を比較し、比較結果がtrueならbをaに入れ、比較結果を返す。
