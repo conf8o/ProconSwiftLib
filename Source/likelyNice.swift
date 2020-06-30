@@ -19,7 +19,7 @@ private prefix func *<T>(a: inout IndexingIterator<[T]>) -> T {
 ///
 /// クロージャを使って任意の比較ができる
 /// ch(a, b) { abs($0) < abs($1) }
-@inlinable func ch<T: Comparable>(_ a: inout T, _ b: T, _ compare: (T, T) -> Bool) -> Bool {
+@inlinable func ch<T>(_ a: inout T, _ b: T, _ compare: (T, T) -> Bool) -> Bool {
     if compare(a, b) {
         a = b
         return true

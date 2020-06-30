@@ -1,5 +1,6 @@
 private struct PriorityQueue<T: Comparable> {
-    private var data: [T] = []
+    private var data: [T]
+    private var ordered: (T, T) -> Bool
     
     public var isEmpty: Bool {
         return data.isEmpty
@@ -7,6 +8,20 @@ private struct PriorityQueue<T: Comparable> {
     
     public var count: Int {
         return data.count
+    }
+
+    init(_ order: @escaping (T, T) -> Bool) {
+        self.data = []
+        self.ordered = order
+    }
+
+    init<Seq: Sequence>(_ seq: Seq, _ order: @escaping (T, T) -> Bool) where Seq.Element == T {
+        self.data = []
+        self.ordered = order
+        
+        for x in seq {
+            push(x)
+        }
     }
     
     public mutating func pop() -> T? {
@@ -20,7 +35,7 @@ private struct PriorityQueue<T: Comparable> {
         }
     }
     
-    public mutating func append(_ item: T) {
+    public mutating func push(_ item: T) {
         let oldLen = count
         data.append(item)
         siftUp(oldLen)
@@ -37,7 +52,7 @@ private struct PriorityQueue<T: Comparable> {
             var child = 2 * pos + 1
             while child < end {
                 let right = child + 1
-                if right < end && _data[child] <= _data[right] {
+                if right < end && ordered(_data[child], _data[right]) {
                     child = right
                 }
                 swap(&_data[pos], &_data[child])
@@ -52,11 +67,17 @@ private struct PriorityQueue<T: Comparable> {
         var pos = pos
         while pos > 0 {
             let parent = (pos - 1) / 2;
-            if data[pos] <= data[parent] {
+            if ordered(data[pos], data[parent]) {
                 break
             }
             data.swapAt(pos, parent)
             pos = parent
         }
+    }
+}
+
+extension PriorityQueue: Sequence, IteratorProtocol {
+    mutating func next() -> T? {
+        return pop()
     }
 }
