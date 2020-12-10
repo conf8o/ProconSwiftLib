@@ -12,6 +12,6 @@ Released under the MIT license. Please see LICENSE.txt
 - Number.swift
   - 整数論ライブラリです。(GCD, LCMなど)
 - PriorityQueue.swift
-  - 優先度付きキューです。(シーケンスから初期化できるように実装していません。逐次appendする必要があります)
+  - 優先度付きキューです。
 - UnionFind.swift
   - Union Find木です。

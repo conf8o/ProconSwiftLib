@@ -45,3 +45,52 @@ extension Optional {
         return false
     }
 }
+
+class Words<T>: Sequence, IteratorProtocol {
+    let f: (Substring) -> T?
+    init (_ f: @escaping (Substring) -> T?) {
+        self.f = f
+    }
+
+    func next() -> [T]? {
+        return readLine()?.split(separator: " ").map { s in 
+            guard let s = f(s) else { 
+                preconditionFailure("Reader init failed.")
+            }
+            return s
+        }
+    }
+}
+
+extension Words where T == Int {
+    convenience init() {
+        self.init { Int($0) } 
+    }
+}
+
+extension Words where T == String {
+    convenience init() {
+        self.init(String.init)
+    }
+}
+
+extension Words {
+    func get() -> (T, T) {
+        let line = self.next()!
+        return (line[0], line[1])
+    }
+
+    func get() -> (T, T, T) {
+        let line = self.next()!
+        return (line[0], line[1], line[2])
+    }
+     
+    func get() -> (T, T, T, T) {
+        let line = self.next()!
+        return (line[0], line[1], line[2], line[3])
+    }
+}
+
+
+let intReader = Words<Int>()
+

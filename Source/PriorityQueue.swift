@@ -1,4 +1,4 @@
-private struct PriorityQueue<T: Comparable> {
+private struct PriorityQueue<T> {
     private var data: [T]
     private var ordered: (T, T) -> Bool
     
@@ -52,7 +52,7 @@ private struct PriorityQueue<T: Comparable> {
             var child = 2 * pos + 1
             while child < end {
                 let right = child + 1
-                if right < end && ordered(_data[child], _data[right]) {
+                if right < end && ordered(_data[right], _data[child]) {
                     child = right
                 }
                 swap(&_data[pos], &_data[child])
@@ -67,7 +67,7 @@ private struct PriorityQueue<T: Comparable> {
         var pos = pos
         while pos > 0 {
             let parent = (pos - 1) / 2;
-            if ordered(data[pos], data[parent]) {
+            if ordered(data[parent], data[pos]) {
                 break
             }
             data.swapAt(pos, parent)
