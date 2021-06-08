@@ -1,9 +1,5 @@
 # 競技プログラミング用のSwiftライブラリ
 
-Released under the MIT license. Please see LICENSE.txt
-
----
-
 - Combinatorics.swift
   - 組み合わせ論ライブラリです。(順列、組み合わせなど)
 - Deque.swift
